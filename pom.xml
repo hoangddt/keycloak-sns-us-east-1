@@ -20,6 +20,7 @@
         <version.aws-java-sdk-sns>1.11.173</version.aws-java-sdk-sns>
         <version.commons-lang>2.6</version.commons-lang>
         <version.picketbox>5.0.2.Final</version.picketbox>
+        <version.notify-client>3.12.0-RELEASE</version.notify-client>
     </properties>
     <build>
         <plugins>
@@ -132,6 +133,11 @@
             <groupId>org.picketbox</groupId>
             <artifactId>picketbox</artifactId>
             <version>${version.picketbox}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.service.notify</groupId>
+            <artifactId>notifications-java-client</artifactId>
+            <version>${version.notify-client}</version>
         </dependency>
     </dependencies>
 </project>

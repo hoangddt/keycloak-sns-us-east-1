@@ -14,6 +14,7 @@ import org.keycloak.theme.ThemeProvider;
 import six.six.gateway.Gateways;
 import six.six.gateway.SMSService;
 import six.six.gateway.aws.snsclient.SnsNotificationService;
+import six.six.gateway.govuk.notify.NotifySMSService;
 import six.six.gateway.lyrasms.LyraSMSService;
 import six.six.keycloak.EnvSubstitutor;
 import six.six.keycloak.KeycloakSmsConstants;
@@ -179,13 +180,16 @@ public class KeycloakSmsAuthenticatorUtil {
         boolean result;
         SMSService smsService;
         try {
-            Gateways g=Gateways.valueOf(gateway);
+            Gateways g = Gateways.valueOf(gateway);
             switch(g) {
                 case LYRA_SMS:
-                    smsService=new LyraSMSService(endpoint,isProxy);
+                    smsService = new LyraSMSService(endpoint,isProxy);
+                    break;
+                case GOVUK_NOTIFY:
+                    smsService = new NotifySMSService();
                     break;
                 default:
-                    smsService=new SnsNotificationService();
+                    smsService = new SnsNotificationService();
             }
 
             result=smsService.send(checkMobileNumber(setDefaultCountryCodeIfZero(mobileNumber, getMessage(context, KeycloakSmsConstants.MSG_MOBILE_PREFIX_DEFAULT), getMessage(context, KeycloakSmsConstants.MSG_MOBILE_PREFIX_CONDITION))), smsText, smsUsr, smsPwd);
