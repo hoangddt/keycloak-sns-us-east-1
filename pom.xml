@@ -13,7 +13,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.keycloak>3.4.3.Final</version.keycloak>
+        <version.keycloak>4.3.0.Final</version.keycloak>
         <version.wildfly>11.0.0.Final</version.wildfly>
         <version.httpclient>4.5.5</version.httpclient>
         <version.libphonenumber>8.9.0</version.libphonenumber>
