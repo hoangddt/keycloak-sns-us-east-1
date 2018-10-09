@@ -9,10 +9,14 @@ import java.util.Map;
 
 public class NotifySMSService implements SMSService {
 
+    private final NotificationClient client;
+
+    public NotifySMSService(String notifyApiKey) {
+        client = new NotificationClient(notifyApiKey);
+    }
+
     @Override
     public boolean send(String phoneNumber, String message, String login, String pw) {
-        NotificationClient client = new NotificationClient(pw);
-
         String templateId = "8b758d39-29ad-4f02-bb52-a68cfac007b6";
         String reference = "Keycloak OTP";
 
