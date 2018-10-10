@@ -44,6 +44,7 @@ public class KeycloakSmsConstants {
     public static final String MOBILE_VERIFICATION_ENABLED = "mobile_verification_enabled";
     public static final String MOBILE_ASKFOR_ENABLED = "mobile_askfor_enabled";
 
-    // Notify
+    // GOV.UK Notify
     public static final String NOTIFY_API_KEY = "NOTIFY_API_KEY";
+    public static final String NOTIFY_TEMPLATE_ID = "NOTIFY_SMS_TEMPLATE_ID";
 }

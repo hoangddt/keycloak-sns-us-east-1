@@ -171,13 +171,19 @@ public class KeycloakSmsAuthenticatorUtil {
         String smsUsr = EnvSubstitutor.envSubstitutor.replace(getConfigString(config, KeycloakSmsConstants.CONF_PRP_SMS_CLIENTTOKEN));
         String smsPwd = EnvSubstitutor.envSubstitutor.replace(getConfigString(config, KeycloakSmsConstants.CONF_PRP_SMS_CLIENTSECRET));
         String gateway = getConfigString(config, KeycloakSmsConstants.CONF_PRP_SMS_GATEWAY);
+
+        // LyraSMS properties
         String endpoint = EnvSubstitutor.envSubstitutor.replace(getConfigString(config, KeycloakSmsConstants.CONF_PRP_SMS_GATEWAY_ENDPOINT));
         boolean isProxy = getConfigBoolean(config, KeycloakSmsConstants.PROXY_ENABLED);
+
+        // GOV.UK Notify properties
         String notifyApiKey = System.getenv(KeycloakSmsConstants.NOTIFY_API_KEY);
+        String notifyTemplate = System.getenv(KeycloakSmsConstants.NOTIFY_TEMPLATE_ID);
 
-        String template =getMessage(context, KeycloakSmsConstants.CONF_PRP_SMS_TEXT);
+        // Create the SMS message body
+        String template = getMessage(context, KeycloakSmsConstants.CONF_PRP_SMS_TEXT);
+        String smsText = createMessage(template, code, mobileNumber);
 
-        String smsText = createMessage(template,code, mobileNumber);
         boolean result;
         SMSService smsService;
         try {
@@ -187,7 +193,7 @@ public class KeycloakSmsAuthenticatorUtil {
                     smsService = new LyraSMSService(endpoint,isProxy);
                     break;
                 case GOVUK_NOTIFY:
-                    smsService = new NotifySMSService(notifyApiKey);
+                    smsService = new NotifySMSService(notifyApiKey, notifyTemplate);
                     break;
                 default:
                     smsService = new SnsNotificationService();
