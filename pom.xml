@@ -13,13 +13,14 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.keycloak>3.4.3.Final</version.keycloak>
+        <version.keycloak>4.3.0.Final</version.keycloak>
         <version.wildfly>11.0.0.Final</version.wildfly>
         <version.httpclient>4.5.5</version.httpclient>
         <version.libphonenumber>8.9.0</version.libphonenumber>
         <version.aws-java-sdk-sns>1.11.173</version.aws-java-sdk-sns>
         <version.commons-lang>2.6</version.commons-lang>
         <version.picketbox>5.0.2.Final</version.picketbox>
+        <version.notify-client>3.12.0-RELEASE</version.notify-client>
     </properties>
     <build>
         <plugins>
@@ -107,7 +108,6 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-sns</artifactId>
             <version>${version.aws-java-sdk-sns}</version>
-            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
@@ -123,19 +123,21 @@
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>libphonenumber</artifactId>
             <version>${version.libphonenumber}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${version.commons-lang}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.picketbox</groupId>
             <artifactId>picketbox</artifactId>
             <version>${version.picketbox}</version>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.service.notify</groupId>
+            <artifactId>notifications-java-client</artifactId>
+            <version>${version.notify-client}</version>
         </dependency>
     </dependencies>
 </project>
