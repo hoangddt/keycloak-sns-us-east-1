@@ -37,6 +37,10 @@ Under Authentication > Required Actions:
 * Make sure that for 'Update Mobile Number' both the 'Enabled' and 'Default Action' check boxes are checked.
 
 
+## Styling
+
+The styling for the three Keycloak templates relies on using the 'govuk' theme, which can be found [here](https://github.com/UKGovernmentBEIS/keycloak-theme-govuk/?).
+
 ## Contributions
 
 Malys contributions (for [Lyra Network](https://www.lyra-network.com/))
