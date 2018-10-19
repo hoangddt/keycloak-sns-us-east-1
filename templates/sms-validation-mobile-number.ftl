@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="govuk-form-group">
-                    <label for="mobile_number" class="govuk-label">Please confirm your mobile number</label>
+                    <label for="mobile_number_confirm" class="govuk-label">Please confirm your mobile number</label>
                     <input id="mobile_number_confirm" name="mobile_number_confirm" type="text" class="govuk-input" />
                 </div>
 
