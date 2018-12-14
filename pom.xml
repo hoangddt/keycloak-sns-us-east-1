@@ -140,4 +140,24 @@
             <version>${version.notify-client}</version>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-gov-uk-notify-maven</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/gov-uk-notify/maven</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-gov-uk-notify-maven</id>
+            <name>bintray-plugins</name>
+            <url>https://dl.bintray.com/gov-uk-notify/maven</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
