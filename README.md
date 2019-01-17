@@ -34,7 +34,7 @@ Under Authentication > Bindings:
 
 Under Authentication > Required Actions:
 * Click on the 'Register' button and select 'Update Mobile Number' to add the Required Action to the REALM.
-* Make sure that for 'Update Mobile Number' both the 'Enabled' and 'Default Action' check boxes are checked.
+* Make sure that for 'Update Mobile Number' has 'Enabled' checkbox set and 'Default Action' checkbox unset.
 
 
 ## Styling
