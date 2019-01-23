@@ -5,6 +5,7 @@ import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.models.UserModel;
 import six.six.keycloak.KeycloakSmsConstants;
+import six.six.keycloak.MobileNumberHelper;
 import six.six.keycloak.authenticator.KeycloakSmsAuthenticatorUtil;
 
 import javax.ws.rs.core.Response;
@@ -30,16 +31,11 @@ public class KeycloakSmsMobilenumberRequiredAction implements RequiredActionProv
         logger.debug("requiredActionChallenge called ...");
 
         UserModel user = context.getUser();
+        String mobileNumber = MobileNumberHelper.getMobileNumber(user);
 
-        List<String> mobileNumberCreds = user.getAttribute(KeycloakSmsConstants.ATTR_MOBILE);
-
-        String mobileNumber = null;
-
-        if (mobileNumberCreds != null && !mobileNumberCreds.isEmpty()) {
-            mobileNumber = mobileNumberCreds.get(0);
-        }
-
-        Response challenge = context.form().createForm("sms-validation-mobile-number.ftl");
+        Response challenge = context.form()
+                .setAttribute("phoneNumber", mobileNumber)
+                .createForm("sms-validation-mobile-number.ftl");
         context.challenge(challenge);
     }
 
