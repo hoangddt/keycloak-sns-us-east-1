@@ -39,14 +39,8 @@ public class KeycloakSmsMobilenumberRequiredAction implements RequiredActionProv
             mobileNumber = mobileNumberCreds.get(0);
         }
 
-        if (mobileNumber != null && validateTelephoneNumber(mobileNumber, KeycloakSmsAuthenticatorUtil.getMessage(context, KeycloakSmsConstants.MSG_MOBILE_REGEXP))) {
-            // Mobile number is configured
-            context.ignore();
-        } else {
-            // Mobile number is not configured or is invalid
-            Response challenge = context.form().createForm("sms-validation-mobile-number.ftl");
-            context.challenge(challenge);
-        }
+        Response challenge = context.form().createForm("sms-validation-mobile-number.ftl");
+        context.challenge(challenge);
     }
 
     public void processAction(RequiredActionContext context) {
