@@ -1,5 +1,5 @@
 <#import "template.ftl" as layout>
-<@layout.registrationLayout; section>
+<@layout.registrationLayout back=true; section>
     <#if section = "title" || section = "header">
         ${msg("sms-auth.title")}
     <#elseif section = "form">
