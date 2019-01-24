@@ -6,13 +6,12 @@ import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.models.UserModel;
 import six.six.keycloak.KeycloakSmsConstants;
 import six.six.keycloak.MobileNumberHelper;
-import six.six.keycloak.authenticator.KeycloakSmsAuthenticatorUtil;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-import static six.six.keycloak.authenticator.KeycloakSmsAuthenticatorUtil.validateTelephoneNumber;
+import static six.six.keycloak.authenticator.KeycloakSmsAuthenticatorUtil.isPhoneNumberValid;
 
 /**
  * Created by nickpack on 15/08/2017.
@@ -43,9 +42,9 @@ public class KeycloakSmsMobilenumberRequiredAction implements RequiredActionProv
         logger.debug("processAction called ...");
 
         String answer = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number"));
-        if (answer != null && answer.length() > 0 && validateTelephoneNumber(answer,KeycloakSmsAuthenticatorUtil.getMessage(context, KeycloakSmsConstants.MSG_MOBILE_REGEXP))) {
+        if (answer != null && answer.length() > 0 && isPhoneNumberValid(answer)) {
             logger.debug("Valid matching mobile numbers supplied, save credential ...");
-            List<String> mobileNumber = new ArrayList<String>();
+            List<String> mobileNumber = new ArrayList<>();
             mobileNumber.add(answer);
 
             UserModel user = context.getUser();

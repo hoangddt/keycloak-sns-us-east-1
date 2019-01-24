@@ -8,7 +8,7 @@
             <form id="kc-totp-login-form" class="${properties.kcFormClass!} govuk-grid-column-two-thirds" action="${url.loginAction}" method="post">
                 <div class="govuk-form-group">
                     <label for="totp" class="govuk-label">${msg("sms-auth.code")}</label>
-                    <input id="totp" name="smsCode" type="text" class="govuk-input govuk-input--width-5" />
+                    <input id="totp" name="smsCode" type="number" class="govuk-input govuk-input--width-5" autocomplete="false"/>
                 </div>
                 <input class="govuk-button" name="login" id="kc-login" type="submit" value="${msg("doSubmit")}"/>
             </form>
