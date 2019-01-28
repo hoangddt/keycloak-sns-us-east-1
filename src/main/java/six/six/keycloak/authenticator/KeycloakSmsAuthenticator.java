@@ -12,6 +12,7 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
 import six.six.keycloak.KeycloakSmsConstants;
+import six.six.keycloak.MobileNumberHelper;
 import six.six.keycloak.requiredaction.action.required.KeycloakSmsMobilenumberRequiredAction;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -40,14 +41,7 @@ public class KeycloakSmsAuthenticator implements Authenticator {
     }
 
     private String getMobileNumber(UserModel user){
-        List<String> mobileNumberCreds = user.getAttribute(KeycloakSmsConstants.ATTR_MOBILE);
-
-        String mobileNumber = null;
-        if (mobileNumberCreds != null && !mobileNumberCreds.isEmpty()) {
-            mobileNumber = mobileNumberCreds.get(0);
-        }
-
-        return  mobileNumber;
+        return MobileNumberHelper.getMobileNumber(user);
     }
 
     private String getMobileNumberVerified(UserModel user){

@@ -5,13 +5,13 @@ import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.models.UserModel;
 import six.six.keycloak.KeycloakSmsConstants;
-import six.six.keycloak.authenticator.KeycloakSmsAuthenticatorUtil;
+import six.six.keycloak.MobileNumberHelper;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-import static six.six.keycloak.authenticator.KeycloakSmsAuthenticatorUtil.validateTelephoneNumber;
+import static six.six.keycloak.authenticator.KeycloakSmsAuthenticatorUtil.isPhoneNumberValid;
 
 /**
  * Created by nickpack on 15/08/2017.
@@ -30,47 +30,29 @@ public class KeycloakSmsMobilenumberRequiredAction implements RequiredActionProv
         logger.debug("requiredActionChallenge called ...");
 
         UserModel user = context.getUser();
+        String mobileNumber = MobileNumberHelper.getMobileNumber(user);
 
-        List<String> mobileNumberCreds = user.getAttribute(KeycloakSmsConstants.ATTR_MOBILE);
-
-        String mobileNumber = null;
-
-        if (mobileNumberCreds != null && !mobileNumberCreds.isEmpty()) {
-            mobileNumber = mobileNumberCreds.get(0);
-        }
-
-        if (mobileNumber != null && validateTelephoneNumber(mobileNumber, KeycloakSmsAuthenticatorUtil.getMessage(context, KeycloakSmsConstants.MSG_MOBILE_REGEXP))) {
-            // Mobile number is configured
-            context.ignore();
-        } else {
-            // Mobile number is not configured or is invalid
-            Response challenge = context.form().createForm("sms-validation-mobile-number.ftl");
-            context.challenge(challenge);
-        }
+        Response challenge = context.form()
+                .setAttribute("phoneNumber", mobileNumber)
+                .createForm("sms-validation-mobile-number.ftl");
+        context.challenge(challenge);
     }
 
     public void processAction(RequiredActionContext context) {
         logger.debug("processAction called ...");
 
         String answer = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number"));
-        String answer2 = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number_confirm"));
-        if (answer != null && answer.length() > 0 && answer.equals(answer2) && validateTelephoneNumber(answer,KeycloakSmsAuthenticatorUtil.getMessage(context, KeycloakSmsConstants.MSG_MOBILE_REGEXP))) {
+        if (answer != null && answer.length() > 0 && isPhoneNumberValid(answer)) {
             logger.debug("Valid matching mobile numbers supplied, save credential ...");
-            List<String> mobileNumber = new ArrayList<String>();
+            List<String> mobileNumber = new ArrayList<>();
             mobileNumber.add(answer);
 
             UserModel user = context.getUser();
             user.setAttribute(KeycloakSmsConstants.ATTR_MOBILE, mobileNumber);
 
             context.success();
-        } else if (answer != null && answer2 !=null && !answer.equals(answer2)) {
-            logger.debug("Supplied mobile number values do not match...");
-            Response challenge = context.form()
-                    .setError("mobile_number.no.match")
-                    .createForm("sms-validation-mobile-number.ftl");
-            context.challenge(challenge);
         } else {
-            logger.debug("Either one of two fields wasn\'t complete, or the first contains an invalid number...");
+            logger.debug("The field wasn\'t complete or is an invalid number...");
             Response challenge = context.form()
                     .setError("mobile_number.no.valid")
                     .createForm("sms-validation-mobile-number.ftl");

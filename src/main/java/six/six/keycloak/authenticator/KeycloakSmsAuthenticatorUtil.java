@@ -4,6 +4,7 @@ package six.six.keycloak.authenticator;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.RequiredActionContext;
@@ -218,12 +219,43 @@ public class KeycloakSmsAuthenticatorUtil {
         return Long.toString(code);
     }
 
-    public static boolean validateTelephoneNumber(String telephoneNumber, String regexp ) {
-        boolean result=true;
-        if(regexp!=null){
-            result =telephoneNumber.matches(regexp);
+    /**
+     * This validation matches the registration flow's validation
+     * https://github.com/UKGovernmentBEIS/beis-mspsds/blob/master/keycloak/providers/registration-form/src/main/java/uk/gov/beis/mspsds/keycloak/providers/RegistrationMobileNumber.java#L55
+     */
+    public static boolean isPhoneNumberValid(String phoneNumber) {
+        String formattedPhoneNumber = convertInternationalPrefix(phoneNumber);
+
+        String region;
+        if (isPossibleNationalNumber(formattedPhoneNumber)) {
+            region = "GB";
+        } else if (isInternationalNumber(formattedPhoneNumber)) {
+            region = null;
+        } else {
+            return true; // If the number cannot be interpreted as an international or possible UK phone number, do not attempt to validate it.
         }
 
-        return result;
+        try {
+            PhoneNumber parsedPhoneNumber = PhoneNumberUtil.getInstance().parse(formattedPhoneNumber, region);
+            return PhoneNumberUtil.getInstance().isValidNumber(parsedPhoneNumber);
+        } catch (NumberParseException e) {
+            return false;
+        }
+    }
+
+    private static String convertInternationalPrefix(String phoneNumber) {
+        String trimmedPhoneNumber = phoneNumber.trim();
+        if (trimmedPhoneNumber.startsWith("00")) {
+            return trimmedPhoneNumber.replaceFirst("00", "+");
+        }
+        return trimmedPhoneNumber;
+    }
+
+    private static boolean isPossibleNationalNumber(String phoneNumber) {
+        return phoneNumber.trim().startsWith("+44") || phoneNumber.trim().startsWith("07");
+    }
+
+    private static boolean isInternationalNumber(String phoneNumber) {
+        return phoneNumber.trim().startsWith("+");
     }
 }
