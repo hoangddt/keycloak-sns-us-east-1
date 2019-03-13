@@ -13,7 +13,7 @@ public class SnsClientFactory {
     public static AmazonSNSClient getSnsClient(String clientToken, String clientSecret) {
         if (null == snsClient) {
             BasicAWSCredentials CREDENTIALS = new BasicAWSCredentials(clientToken, clientSecret);
-            snsClient = new AmazonSNSClient(CREDENTIALS).withRegion(Region.getRegion(Regions.EU_WEST_1));
+            snsClient = new AmazonSNSClient(CREDENTIALS).withRegion(Region.getRegion(Regions.US_EAST_1));
         }
         return snsClient;
     }
