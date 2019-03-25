@@ -37,7 +37,7 @@ public class KeycloakSmsAuthenticator implements Authenticator {
 
 
     private boolean isOnlyForVerificationMode(boolean onlyForVerification, String mobileNumber, String mobileNumberVerified) {
-        return (mobileNumber ==null || onlyForVerification==true && !mobileNumber.equals(mobileNumberVerified));
+        return (mobileNumber == null || onlyForVerification == true && !mobileNumber.equals(mobileNumberVerified));
     }
 
     private String getMobileNumber(UserModel user) {
