@@ -81,30 +81,9 @@ public class KeycloakSmsAuthenticator implements Authenticator {
         Response challenge = null;
 
         if (result) {
-            CODE_STATUS status = this.validateCode(context);
-            logger.debug("Verify phone, check code status: " + status);
-
-            switch (status) {
-                case EXPIRED:
-                    challenge = context.form()
-                            .setError("sms-auth.code.expired")
-                            .createForm("sms-validation.ftl");
-                    context.failureChallenge(AuthenticationFlowError.EXPIRED_CODE, challenge);
-                    break;
-
-                case INVALID:
-                    challenge = context.form()
-                            .setError("sms-auth.code.invalid")
-                            .createForm("sms-validation.ftl");
-                    context.failureChallenge(AuthenticationFlowError.INVALID_CREDENTIALS, challenge);
-                    break;
-
-                case VALID:
-                    logger.debug("Verify phone success, update verified phone ");
-                    updateVerifiedMobilenumber(context);
-                    verifyResult = true;
-                    break;
-            }
+            logger.debug("SMS for verification phone number sent");
+            challenge = context.form().createForm("sms-verify-phone-validation.ftl");
+            context.challenge(challenge);
         } else {
             challenge = context.form()
                 .setError("sms-auth.not.send")

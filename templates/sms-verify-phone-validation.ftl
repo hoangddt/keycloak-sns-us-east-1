@@ -14,7 +14,7 @@
             <div class="govuk-grid-column-full"><p>${msg("sms-auth.instruction")}</p></div>
             <form id="kc-totp-login-form" class="${properties.kcFormClass!} govuk-grid-column-two-thirds" action="${url.loginAction}" method="post">
                 <div class="govuk-form-group  ${errorClass!""} ">
-                    <label for="totp" class="govuk-label">${msg("sms-auth.code")}</label>
+                    <label for="totp" class="govuk-label">${msg("sms-auth.verifyphone.code")}</label>
                     <input id="totp" name="smsCode" type="number" class="govuk-input govuk-input--width-5" autocomplete="false"/>
                 </div>
                 <input class="govuk-button" name="login" id="kc-login" type="submit" value="${msg("doSubmit")}"/>
