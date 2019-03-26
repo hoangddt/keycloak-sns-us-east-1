@@ -59,6 +59,8 @@ public class KeycloakSmsAuthenticator implements Authenticator {
     }
 
     private boolean send2FACodeViaSMS(AuthenticationFlowContext context, String mobileNumber) {
+        logger.debug("send2FACodeViaSMS, phone: " + mobileNumber);
+
         AuthenticatorConfigModel config = context.getAuthenticatorConfig();
 
         long nrOfDigits = KeycloakSmsAuthenticatorUtil.getConfigLong(config, KeycloakSmsConstants.CONF_PRP_SMS_CODE_LENGTH, 8L);
@@ -71,11 +73,12 @@ public class KeycloakSmsAuthenticator implements Authenticator {
         String code = KeycloakSmsAuthenticatorUtil.getSmsCode(nrOfDigits);
 
         this.storeSMSCode(context, code, new Date().getTime() + (ttl * 1000)); // s --> ms
+        logger.debug("Sending code to mobile number: " + mobileNumber + ", code is: " + code);
         return KeycloakSmsAuthenticatorUtil.sendSmsCode(mobileNumber, code, context);
     }
 
     private boolean verifyMobileNumber(AuthenticationFlowContext context, String mobileNumber) {
-        logger.debug("Veryfing phone: " + mobileNumber);
+        logger.debug("Verifying phone: " + mobileNumber);
         boolean result = this.send2FACodeViaSMS(context, mobileNumber);
         boolean verifyResult = false;
         Response challenge = null;
@@ -105,6 +108,7 @@ public class KeycloakSmsAuthenticator implements Authenticator {
             String mobileNumberVerified = this.getMobileNumberVerified(user);
 
             if (mobileNumber == null) {
+                logger.debug("No mobileNumber, asking for one");
                 boolean isAskingFor = KeycloakSmsAuthenticatorUtil.getConfigBoolean(config, KeycloakSmsConstants.MOBILE_ASKFOR_ENABLED);
                 if (isAskingFor) {
                     //Enable access and ask for mobilenumber
@@ -127,23 +131,26 @@ public class KeycloakSmsAuthenticator implements Authenticator {
                     context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR, challenge);
                 }
 
-            } else {
+            } else if (mobileNumber != null) {
                 // phone is not verify -> verify
                 logger.debug("Phone is not verify, verifying: " + this.getMobileNumber(user));
 
                 // ToDo: check this number and number in update verify
                 this.verifyMobileNumber(context, this.getMobileNumber(user));
-                boolean result = this.send2FACodeViaSMS(context, this.getMobileNumberVerified(user));
+                this.updateVerifiedMobilenumber(context);
+
+                logger.debug("Verify complete, number verified: " + this.getMobileNumberVerified(user));
+                // boolean result = this.send2FACodeViaSMS(context, this.getMobileNumber(user));
                 
-                if (result) {
-                    Response challenge = context.form().createForm("sms-validation.ftl");
-                    context.challenge(challenge);
-                } else {
-                    Response challenge = context.form()
-                        .setError("sms-auth.not.send")
-                        .createForm("sms-validation-error.ftl");
-                    context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR, challenge);
-                }
+                // if (result) {
+                //     Response challenge = context.form().createForm("sms-validation.ftl");
+                //     context.challenge(challenge);
+                // } else {
+                //     Response challenge = context.form()
+                //         .setError("sms-auth.not.send")
+                //         .createForm("sms-validation-error.ftl");
+                //     context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR, challenge);
+                // }
             }
         } else {
             context.success();
