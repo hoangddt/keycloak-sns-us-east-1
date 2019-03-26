@@ -118,6 +118,7 @@ public class KeycloakSmsAuthenticator implements Authenticator {
             }
 
             if (mobileNumberVerified != null) {
+                // phone is verified -> send code
                 boolean result = this.send2FACodeViaSMS(context, mobileNumberVerified);
                 logger.debug("SMS send status: " + result);
 
